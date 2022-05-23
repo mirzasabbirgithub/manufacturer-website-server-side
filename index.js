@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -16,14 +16,33 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
           try {
                     await client.connect();
-                    const serviceCollection = client.db('screwdriver').collection('items');
+                    const itemCollection = client.db('screwdriver').collection('items');
+                    const reviewCollection = client.db('screwdriver').collection('review');
 
                     app.get('/item', async (req, res) => {
                               const query = {};
-                              const cursor = serviceCollection.find(query);
+                              const cursor = itemCollection.find(query);
                               const items = await cursor.toArray();
                               res.send(items);
                     })
+
+                    app.get('/review', async (req, res) => {
+                              const query = {};
+                              const cursor = reviewCollection.find(query);
+                              const reviews = await cursor.toArray();
+                              res.send(reviews);
+                    })
+
+                    //purchased item
+                    app.get('/item/:id', async (req, res) => {
+                              const id = req.params.id;
+                              const query = { _id: ObjectId(id) };
+                              const item = await itemCollection.findOne(query);
+                              res.send(item);
+                    });
+
+
+
 
 
           }
