@@ -18,6 +18,7 @@ async function run() {
                     await client.connect();
                     const itemCollection = client.db('screwdriver').collection('items');
                     const reviewCollection = client.db('screwdriver').collection('review');
+                    const purchasedCollection = client.db('screwdriver').collection('purchased');
 
                     app.get('/item', async (req, res) => {
                               const query = {};
@@ -41,6 +42,21 @@ async function run() {
                               res.send(item);
                     });
 
+                    //get purchased item
+                    app.get('/purchased', async (req, res) => {
+                              const email = req.query.userEmail;
+                              const query = { email: email };
+                              const result = await purchasedCollection.find(query).toArray();
+                              res.send(result);
+
+                    })
+
+                    //add purchased item
+                    app.post('/purchased', async (req, res) => {
+                              const purchased = req.body;
+                              const result = await purchasedCollection.insertOne(purchased);
+                              res.send(result);
+                    })
 
 
 
