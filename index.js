@@ -19,6 +19,7 @@ async function run() {
                     const itemCollection = client.db('screwdriver').collection('items');
                     const reviewCollection = client.db('screwdriver').collection('review');
                     const purchasedCollection = client.db('screwdriver').collection('purchased');
+                    const userCollection = client.db('screwdriver').collection('users');
 
                     app.get('/item', async (req, res) => {
                               const query = {};
@@ -58,6 +59,25 @@ async function run() {
                               res.send(result);
                     })
 
+                    //user get API
+                    app.get('/user', async (req, res) => {
+                              const users = await userCollection.find().toArray();
+                              res.send(users);
+                    });
+
+
+                    //users API
+                    app.put('/user/:email', async (req, res) => {
+                              const email = req.params.email;
+                              const user = req.body;
+                              const filter = { email: email };
+                              const options = { upsert: true };
+                              const updateDoc = {
+                                        $set: user,
+                              };
+                              const result = await userCollection.updateOne(filter, updateDoc, options);
+                              res.send({ result });
+                    })
 
 
 
