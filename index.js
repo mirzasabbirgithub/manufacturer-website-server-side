@@ -119,6 +119,24 @@ async function run() {
 
 
 
+                    //Delete API for item
+                    app.delete('/item/:id', async (req, res) => {
+                              const id = req.params.id;
+                              const query = { _id: ObjectId(id) };
+                              const result = await itemCollection.deleteOne(query);
+                              res.send(result);
+                    });
+
+
+                    //Delete API for user
+                    app.delete('/user/:id', async (req, res) => {
+                              const id = req.params.id;
+                              const query = { _id: ObjectId(id) };
+                              const result = await userCollection.deleteOne(query);
+                              res.send(result);
+                    });
+
+
 
           }
           finally {
