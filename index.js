@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
@@ -20,6 +21,7 @@ async function run() {
                     const reviewCollection = client.db('screwdriver').collection('review');
                     const purchasedCollection = client.db('screwdriver').collection('purchased');
                     const userCollection = client.db('screwdriver').collection('users');
+                    const profileCollection = client.db('screwdriver').collection('profile');
 
                     app.get('/item', async (req, res) => {
                               const query = {};
@@ -27,6 +29,13 @@ async function run() {
                               const items = await cursor.toArray();
                               res.send(items);
                     })
+
+                    //Add Item API
+                    app.post('/item', async (req, res) => {
+                              const newItem = req.body;
+                              const result = await itemCollection.insertOne(newItem);
+                              res.send(result);
+                    });
 
 
                     //Review APIs
@@ -84,8 +93,30 @@ async function run() {
                                         $set: user,
                               };
                               const result = await userCollection.updateOne(filter, updateDoc, options);
-                              res.send({ result });
+                              res.send({ result, token });
+                    });
+
+                    //use Admin API
+                    app.get('/admin/:email', async (req, res) => {
+                              const email = req.params.email;
+                              const user = await userCollection.findOne({ email: email });
+                              const isAdmin = user.role === 'admin';
+                              res.send({ admin: isAdmin })
                     })
+
+                    //Admin API
+                    app.put('/user/admin/:email', async (req, res) => {
+                              const email = req.params.email;
+                              const filter = { email: email };
+                              const updateDoc = {
+                                        $set: { role: 'admin' },
+                              };
+                              const result = await userCollection.updateOne(filter, updateDoc);
+                              res.send(result);
+
+
+                    })
+
 
 
 
