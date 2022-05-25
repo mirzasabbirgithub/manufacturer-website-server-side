@@ -28,6 +28,14 @@ async function run() {
                               res.send(items);
                     })
 
+
+                    //Review APIs
+                    app.post('/review', async (req, res) => {
+                              const newComment = req.body;
+                              const result = await reviewCollection.insertOne(newComment);
+                              res.send(result);
+                    });
+
                     app.get('/review', async (req, res) => {
                               const query = {};
                               const cursor = reviewCollection.find(query);
