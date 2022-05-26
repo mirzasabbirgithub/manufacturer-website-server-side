@@ -33,6 +33,23 @@ async function run() {
                               res.send(items);
                     })
 
+                    //get purchased API
+                    app.get('/purchased', async (req, res) => {
+                              const query = {};
+                              const cursor = purchasedCollection.find(query);
+                              const orders = await cursor.toArray();
+                              res.send(orders);
+                    })
+
+                    //delete purchased API
+                    app.delete('/purchased/:id', async (req, res) => {
+                              const id = req.params.id;
+                              const query = { _id: ObjectId(id) };
+                              const result = await purchasedCollection.deleteOne(query);
+                              res.send(result);
+                    });
+
+
                     //Add Item API
                     app.post('/item', async (req, res) => {
                               const newItem = req.body;
