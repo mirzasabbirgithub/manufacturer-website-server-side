@@ -47,8 +47,8 @@ async function run() {
                               res.send(items);
                     })
 
-                    //get purchased API
-                    app.get('/purchased', async (req, res) => {
+                    //get all purchased API
+                    app.get('/purchaseall', async (req, res) => {
                               const query = {};
                               const cursor = purchasedCollection.find(query);
                               const orders = await cursor.toArray();
