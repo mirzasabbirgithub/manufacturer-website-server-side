@@ -56,7 +56,7 @@ async function run() {
                     })
 
                     //delete purchased API
-                    app.delete('/purchased/:id', async (req, res) => {
+                    app.delete('/purchaseall/:id', async (req, res) => {
                               const id = req.params.id;
                               const query = { _id: ObjectId(id) };
                               const result = await purchasedCollection.deleteOne(query);
