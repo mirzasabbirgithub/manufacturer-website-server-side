@@ -146,15 +146,17 @@ async function run() {
                     });
 
 
-                    app.get('/updateprofile', async (req, res) => {
-                              const id = req.id;
-                              const query = {};
+                    //get profile information
+                    app.get('/myprofile/:id', async (req, res) => {
+                              const id = req.params.id;
+                              const query = { _id: ObjectId(id) };
                               const result = await profileCollection.findOne(query);
                               res.send(result);
                     });
 
-                    // add purchased item
-                    app.put('/updateprofile/:id', async (req, res) => {
+
+                    // put purchased item
+                    app.put('/myprofile/:id', async (req, res) => {
                               const id = req.params.id;
                               const updated = req.body;
                               const filter = { _id: ObjectId(id) };
@@ -167,7 +169,7 @@ async function run() {
                     })
 
 
-                    // app.post('/updateprofile', async (req, res) => {
+                    // app.post('/myprofile', async (req, res) => {
                     //           const profile = req.body;
                     //           const result = await profileCollection.insertOne(profile);
                     //           res.send(result);
@@ -207,7 +209,6 @@ async function run() {
                                                   transactionId: payment.transactionId
                                         }
                               }
-
                               const result = await paymentCollection.insertOne(payment);
                               const updatedPurchased = await purchasedCollection.updateOne(filter, updatedDoc);
                               res.send(updatedPurchased);
