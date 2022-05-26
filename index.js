@@ -169,13 +169,6 @@ async function run() {
                     })
 
 
-                    // app.post('/myprofile', async (req, res) => {
-                    //           const profile = req.body;
-                    //           const result = await profileCollection.insertOne(profile);
-                    //           res.send(result);
-                    // })
-
-
                     app.get('/purchased/:id', async (req, res) => {
                               const id = req.params.id;
                               const query = { _id: ObjectId(id) };
